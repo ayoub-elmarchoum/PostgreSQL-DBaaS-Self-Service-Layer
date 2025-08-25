@@ -1,0 +1,106 @@
+---
+include:
+  - project: 'global/genesis/stacks/terraform/pipelines/internal/shared'
+    file: 'provider.yml'
+
+
+
+# stages:
+#   - build
+# 
+# .linux_variables: &linux_variables
+#   variables:
+#     MYCI_GOARCH: 'amd64'
+#     MYCI_GOOS: 'linux'
+#     MYCI_BIN_EXTENSION: ''
+# 
+# .windows_variables: &windows_variables
+#   variables:
+#     MYCI_GOARCH: 'amd64'
+#     MYCI_GOOS: 'windows'
+#     MYCI_BIN_EXTENSION: '.exe'
+# 
+# .build_tmpl: &build_tmpl
+#   stage: build
+#   image: artifactory.global.ingenico.com/local-core-docker-core-sandbox/golang:1.17
+#   variables:
+#     MYCI_GOARCH: 'changeme'
+#     MYCI_GOOS: 'changeme'
+#     MYCI_BIN_EXTENSION: 'changeme'
+#   script:
+#     # Vérification du formatage Go
+#     - |
+#       gofmt_files=$(gofmt -l -s .)
+#       if [ -n "$gofmt_files" ]; then
+#         echo "Go files not formatted correctly:"
+#         echo "$gofmt_files"
+#         echo "Attempting to format files..."
+#         gofmt -s -w .
+#         echo "Files formatted. Please check changes and commit them."
+#         exit 1
+#       fi
+#     # Exportation des variables GO pour la compilation
+#     - export GOARCH=${MYCI_GOARCH}
+#     - export GOOS=${MYCI_GOOS}
+#     # Mise à jour de la configuration git
+#     - git config --global http.sslVerify false
+#     # Exécution des tests
+#     - go test ./...
+#     # Compilation du binaire
+#     - go build -o ${CI_PROJECT_NAME}${MYCI_BIN_EXTENSION} .
+#     # Préparation du répertoire du provider
+#     - mkdir -p $HOME/.terraform.d/plugins/linux_amd64
+#     # Copier le binaire dans le répertoire du provider
+#     - cp ${CI_PROJECT_NAME}${MYCI_BIN_EXTENSION} $HOME/.terraform.d/plugins/linux_amd64/
+#     # Écho de confirmation
+#     - echo "Provider published locally to $HOME/.terraform.d/plugins/linux_amd64/"
+#     - ls -l $HOME/.terraform.d/plugins/linux_amd64/
+#     # Afficher le contenu actuel de .terraformrc s'il existe
+#     - |
+#       if [ -f "$HOME/.terraformrc" ]; then
+#         echo "Contenu actuel de .terraformrc :"
+#         cat "$HOME/.terraformrc"
+#       else
+#         echo ".terraformrc n'existe pas, il sera créé."
+#   
+#         { 
+#           echo "disable_checkpoint = true"
+#           echo "provider_installation {"
+#           echo "  dev_overrides {"
+#           echo "    \"ingenico/dbaas\" = \"$HOME/.terraform.d/plugins/linux_amd64\""
+#           echo "  }"
+#           echo "}"
+#         } > "$HOME/.terraformrc"
+#       # Afficher le fichier nouvellement créé ou modifié
+#         echo "Contenu de .terraformrc nouvellement créé :"
+#         cat "$HOME/.terraformrc"
+#       fi
+# 
+# 
+# 
+#      # Confirmation de modification ou création
+#     - echo ".terraformrc modifié/créé avec le chemin du provider"
+# 
+#     # Téléchargement de Terraform CLI avec diagnostics
+#   artifacts:
+#     expire_in: 10 mins
+#     paths:
+#       - ${CI_PROJECT_NAME}${MYCI_BIN_EXTENSION}
+#   tags:
+#     - standard
+#     - linux
+#     - sandbox
+# 
+# build:linux_amd64:
+#   <<: *build_tmpl
+#   <<: *linux_variables
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "master"'
+#       when: always
+# 
+# #build:windows_amd64:
+# #  <<: *build_tmpl
+# #  <<: *windows_variables
+# #  rules:
+# #    - if: '$CI_COMMIT_BRANCH == "master"'
+# #      when: always

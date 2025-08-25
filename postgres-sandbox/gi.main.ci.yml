@@ -1,0 +1,15 @@
+---
+# file managed by Genesis Configuration
+# do not edit
+# to customize, create a file gi.extend.ci.yml
+
+include:
+  - project: 'global/genesis/stacks/terraform/pipelines/user/shared'
+    file: 'trigger-sandbox.yml'
+    ref: 'master'
+
+  - local: gi.extend.ci.yml
+    rules:
+      - exists:
+          - gi.extend.ci.yml
+

@@ -1,0 +1,74 @@
+# gi.extend.ci.yml
+---
+
+# Injecte la variable Terraform token depuis GitLab CI/CD
+variables:
+  TF_VAR_token: "${GENESIS_STACK_DATABASE_PROVIDER_DBAAS_TOKEN}"
+  TF_VAR_tenant: "${CI_PROJECT_PATH}"
+trigger:
+  extends: .template
+  stage: trigger
+  environment:
+    name: $CI_COMMIT_REF_NAME
+  script:
+    - echo "DEBUG TF_VAR_token=$TF_VAR_token"
+    - echo "DEBUG GENESIS_STACK_DATABASE_PROVIDER_DBAAS_TOKEN=$GENESIS_STACK_DATABASE_PROVIDER_DBAAS_TOKEN"
+    - echo "* Trigger ${AIS_AUTOMATION_STACK_NAME} runtime"
+    - plumbing --version
+    - >
+      plumbing gitlab trigger
+      --token "${AIS_AUTOMATION_STACK_RUNTIME_USER_TRIGGER_TOKEN}"
+      --project "${AIS_AUTOMATION_STACK_RUNTIME_USER_TRIGGER_PROJECT_ID}"
+      --ref "${CI_COMMIT_REF_NAME}"
+      --output pipeline.json
+      --env TG_GENESIS_TENANT_NAME="${CI_PROJECT_ROOT_NAMESPACE}"
+      --env TG_GENESIS_TENANT_SECRET="${AIS_AUTOMATION_SUBSCRIPTION_KEY}"
+      --env TG_GENESIS_STACK_NAME="${AIS_AUTOMATION_STACK_NAME}"
+      --env TG_GENESIS_STACK_PLATFORM="${CI_COMMIT_REF_NAME}"
+      --env TG_GENESIS_STACK_REGION="${AIS_AUTOMATION_REGION_NAME}"
+      --env TG_GENESIS_UPSTREAM_CI_PROJECT_URL="${CI_PROJECT_URL}"
+      --env TG_GENESIS_UPSTREAM_CI_COMMIT_SHA="${CI_COMMIT_SHA}"
+      --env TG_GENESIS_UPSTREAM_CI_PROJECT_PATH_SLUG="${CI_PROJECT_PATH_SLUG}"
+      --env NAMESPACE="${CI_PROJECT_ROOT_NAMESPACE}"
+      --env STACK="${AIS_AUTOMATION_STACK_NAME}"
+      --env BRANCH="${CI_COMMIT_REF_NAME}"
+      --env REGION="${AIS_AUTOMATION_REGION_NAME}"
+      --env TFJAIL_UPSTREAM_COMMIT_REF_NAME="${CI_COMMIT_REF_NAME}"
+      --env TFJAIL_UPSTREAM_COMMIT_SHA="${CI_COMMIT_SHA}"
+      --env TFJAIL_UPSTREAM_GITLAB_USER_LOGIN="${CI_GITLAB_USER_LOGIN}"
+      --env TFJAIL_UPSTREAM_PIPELINE_ID="${CI_PIPELINE_ID}"
+      --env TFJAIL_UPSTREAM_PIPELINE_CREATED_AT="${CI_PIPELINE_CREATED_AT}"
+      --env TFJAIL_UPSTREAM_PROJECT_NAME="${CI_PROJECT_NAME}"
+      --env TFJAIL_UPSTREAM_PIPELINE_URL="${CI_PIPELINE_URL}"
+      --env TFJAIL_UPSTREAM_PROJECT_ID="${CI_PROJECT_ID}"
+      --env TFJAIL_UPSTREAM_PROJECT_PATH="${CI_PROJECT_PATH}"
+      --env TFJAIL_UPSTREAM_PROJECT_PATH_SLUG="${CI_PROJECT_PATH_SLUG}"
+      --env TFJAIL_UPSTREAM_PROJECT_ROOT_NAMESPACE="${CI_PROJECT_ROOT_NAMESPACE}"
+      --env TFJAIL_UPSTREAM_PROJECT_URL="${CI_PROJECT_URL}"
+      --env GI_RESOURCE_WATCHDOG_EXPECTED_B64="$(echo -n "$GI_RESOURCE_WATCHDOG_EXPECTED" | base64 -w 0)"
+      --env GI_RESOURCE_WATCHDOG_MAX="${GI_RESOURCE_WATCHDOG_MAX}"
+      --env GI_RESOURCE_WATCHDOG_ENABLE="${GI_RESOURCE_WATCHDOG_ENABLE}"
+      --env TF_VAR_token="${TF_VAR_token}"
+
+validate:
+  extends: .template
+  stage: validate
+  environment:
+    name: $CI_COMMIT_REF_NAME
+
+plan:
+  extends: .template
+  stage: plan
+  environment:
+    name: $CI_COMMIT_REF_NAME
+
+watchdog:
+  extends: .template
+  stage: analyze
+  environment:
+    name: $CI_COMMIT_REF_NAME
+
+apply:
+  stage: apply
+  environment:
+    name: $CI_COMMIT_REF_NAME

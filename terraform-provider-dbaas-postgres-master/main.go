@@ -1,0 +1,26 @@
+package main
+
+import (
+	"context"
+	"flag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"terraform-provider-dbaas-postgres/dbaas-postgres"
+)
+
+func main() {
+	debugFlag := flag.Bool("debug", false, "Start provider in stand-alone debug mode.")
+	flag.Parse()
+
+	serveOpts := &plugin.ServeOpts{
+		ProviderFunc: func() *schema.Provider {
+			return dbaas.Provider()
+		},
+	}
+
+	if debugFlag != nil && *debugFlag {
+		plugin.Debug(context.Background(), "registry.terraform.io/ingenico/dbaas", serveOpts)
+	} else {
+		plugin.Serve(serveOpts)
+	}
+}

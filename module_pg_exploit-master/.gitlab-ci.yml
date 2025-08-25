@@ -1,0 +1,4 @@
+---
+include:
+  - project: 'global/genesis/stacks/terraform/pipelines/internal/shared'
+    file: 'module.yml'
