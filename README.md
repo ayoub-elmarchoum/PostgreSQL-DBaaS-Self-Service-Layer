@@ -1,4 +1,3 @@
-# PostgreSQL-DBaaS-Self-Service-Layer
 # 📘 PostgreSQL DBaaS Self-Service Layer
 
 This project explores the development of an **internal Database-as-a-Service (DBaaS) platform** at **Worldline**, addressing the need for **automation, scalability, and reliability** in managing **PostgreSQL instances** across sandbox, preproduction, and production environments.  
