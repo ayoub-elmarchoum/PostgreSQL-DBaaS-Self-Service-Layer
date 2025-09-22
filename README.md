@@ -97,11 +97,6 @@ The project followed an **Agile approach**:
 
 ---
 
-## 🎥 Demo / Video
-
-👉 [Project Demo Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)  
-*(replace with actual demo link)*  
-
 ---
 
 ## 📌 Future Improvements
