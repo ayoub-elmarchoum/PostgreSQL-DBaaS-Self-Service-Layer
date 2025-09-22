@@ -93,9 +93,8 @@ The project followed an **Agile approach**:
 ## 📸 Images & Diagrams
 
 ### Example: High-Level Architecture
-![Architecture Example](https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg)
+![Architecture Example](Architetcture.png)
 
----
 
 ---
 
