@@ -34,13 +34,14 @@ The technical solution is based on an integration of modern DevOps tools and pra
 
 📌 **Project Tree (main components):**
 POSTGRESQL-DBAAS-SELF-SERVICE-LAYER/
-- `module_pg_db-master/` — Core DB Terraform module (création / configuration des bases)
-- `module_pg_exploit-master/` — Module exploit pour scénarios de tests
-- `postgres-exploit-sandbox/` — Sandbox pour tests d'exploitation
-- `postgres-sandbox/` — Sandbox PostgreSQL standard
-- `terraform-provider-dbaas-postgres-exploit-master/` — Provider Terraform personnalisé (exploit) en Go
-- `terraform-provider-dbaas-postgres-master/` — Provider Terraform principal en Go (DBaaS)
+- `module_pg_db-master/` — Module Terraform principal (création / configuration des bases)
+- `module_pg_exploit-master/` — Module de maintenance (ex. `pg_repack`, tâches de cleanup et optimisation)
+- `postgres-exploit-sandbox/` — Sandbox dédié aux tests et exécutions des jobs de maintenance
+- `postgres-sandbox/` — Sandbox PostgreSQL standard pour développement/tests
+- `terraform-provider-dbaas-postgres-exploit-master/` — Provider Terraform dédié aux opérations de maintenance (lance/coordonne les playbooks Ansible correspondants)
+- `terraform-provider-dbaas-postgres-master/` — Provider Terraform principal en Go (création/suppression/gestion DB)
 - `README.md` — Documentation du projet
+
 
 
 ---
